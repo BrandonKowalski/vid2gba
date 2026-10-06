@@ -1,0 +1,10 @@
+[package]
+name = "vid2gba-core"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+
+[dependencies]
+anyhow = "1"
+font8x8 = "0.3"
+rayon = "1"

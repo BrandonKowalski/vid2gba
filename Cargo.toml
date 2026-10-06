@@ -1,0 +1,6 @@
+[workspace]
+resolver = "3"
+members = ["core", "cli", "web/wasm"]
+
+[profile.test]
+opt-level = 3

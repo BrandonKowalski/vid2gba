@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>vid2gba</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <header class="masthead">
+      <h1>vid2gba</h1>
+      <nav id="steps" aria-label="Steps" hidden>
+        <button type="button" data-step="videos">select videos</button>
+        <button type="button" data-step="adjust">adjust</button>
+        <button type="button" data-step="build">build</button>
+        <button type="button" data-step="play">play</button>
+      </nav>
+    </header>
+    <main>
+      <section id="unsupported" class="panel" hidden>
+        <h2>this browser can't run vid2gba</h2>
+        <p>Missing: <span id="missing"></span>.</p>
+        <p>Use a current Chrome, Edge, desktop Firefox, or Safari 26 or newer.</p>
+      </section>
+      <div id="app" hidden>
+        <p id="error" class="error" role="alert" hidden></p>
+        <section id="step-videos" class="step">
+          <h2>1. select videos</h2>
+          <label id="drop" class="drop">
+            <input id="file" type="file" multiple accept="video/*,.mkv,.mov,.webm,.mp4" />
+            <strong>Drop videos here</strong>
+            <span>or click to browse: MP4, WebM, MKV, MOV</span>
+          </label>
+          <div id="list-panel" class="panel" hidden>
+            <ul id="videos"></ul>
+            <div id="cart-row" class="field" hidden>
+              <label>Cartridge title <input id="cart-title" maxlength="60" value="vid2gba" /></label>
+            </div>
+          </div>
+          <div class="nav"><span></span><button id="next-adjust" class="primary" type="button">adjust</button></div>
+        </section>
+        <section id="step-adjust" class="step" hidden>
+          <h2>2. adjust</h2>
+          <div id="tabs" role="tablist"></div>
+          <div class="panel">
+            <p id="file-info" class="muted"></p>
+            <p id="notice" class="notice" hidden></p>
+            <video id="video" controls muted playsinline></video>
+            <div id="trim" class="trim">
+              <div class="trim-track"><div id="trim-range" class="trim-range"></div></div>
+              <div id="trim-start" class="trim-handle" role="slider" tabindex="0" aria-label="Trim start"></div>
+              <div id="trim-end" class="trim-handle" role="slider" tabindex="0" aria-label="Trim end"></div>
+            </div>
+            <div class="field">
+              <label>Start <input id="start" placeholder="0:00" /></label>
+              <button id="set-start" type="button">Start here</button>
+              <label>End <input id="end" placeholder="end" /></label>
+              <button id="set-end" type="button">End here</button>
+            </div>
+            <p id="trim-error" class="error" hidden></p>
+            <div class="field">
+              <label>Title <input id="title" maxlength="200" /></label>
+            </div>
+            <div class="field">
+              <span>Subtitles</span>
+              <label class="file-button">Add .srt / .vtt<input id="subs" type="file" accept=".srt,.vtt,text/vtt" /></label>
+              <span id="subs-info" class="notice" hidden></span>
+              <button id="subs-clear" type="button" hidden>Remove subtitles</button>
+            </div>
+          </div>
+          <div class="nav">
+            <button id="back-videos" type="button">select videos</button>
+            <button id="next-build" class="primary" type="button">build</button>
+          </div>
+        </section>
+        <section id="step-build" class="step" hidden>
+          <h2>3. build</h2>
+          <fieldset class="segmented">
+            <legend>Made for</legend>
+            <label><input type="radio" name="target" value="emulator" checked /><span>Emulator</span></label>
+            <label><input type="radio" name="target" value="gba" /><span>Real GBA</span></label>
+          </fieldset>
+          <details class="advanced">
+            <summary>Advanced</summary>
+            <label>Frame rate
+              <select id="fps">
+                <option value="">Auto</option>
+                <option>30</option>
+                <option>24</option>
+                <option>20</option>
+                <option>15</option>
+                <option>12</option>
+                <option>10</option>
+              </select>
+            </label>
+            <label><input id="half" type="checkbox" /> Force half resolution (120×80)</label>
+          </details>
+          <div class="panel">
+            <button id="convert" class="primary" type="button">Build cartridge</button>
+            <div id="progress" hidden>
+              <div class="progress-head"><strong>Building</strong><span id="progress-label"></span></div>
+              <progress id="bar" max="1" value="0"></progress>
+              <p class="muted">Fits the best quality into 32 MiB. Longer videos take a few tries.</p>
+              <button id="cancel" type="button">Cancel</button>
+            </div>
+          </div>
+          <div class="nav"><button id="back-adjust" type="button">adjust</button><span></span></div>
+        </section>
+        <section id="step-play" class="step" hidden>
+          <h2>4. play</h2>
+          <p id="summary"></p>
+          <p id="gba-note" class="notice" hidden>The preview looks brighter than a real GBA screen will.</p>
+          <div id="gba" class="gba"><canvas id="screen" width="240" height="160"></canvas></div>
+          <div class="actions">
+            <button id="download" class="primary" type="button">Download <span class="dot">.</span>gba</button>
+            <button id="new-cart" type="button">Start new cart</button>
+          </div>
+        </section>
+      </div>
+    </main>
+    <footer id="credits">
+      <p><a href="https://github.com/Vanilagy/mediabunny">Mediabunny</a> and the <a href="https://github.com/thenick775/mgba/tree/feature/wasm">mGBA WebAssembly build</a> by thenick775, both <a href="https://www.mozilla.org/MPL/2.0/">MPL-2.0</a></p>
+      <p><a href="https://fonts.google.com/specimen/Press+Start+2P">Press Start 2P</a> and <a href="https://github.com/IBM/plex">IBM Plex Mono</a> fonts, both <a href="licenses/OFL.txt">SIL OFL 1.1</a></p>
+      <p><a href="https://thenounproject.com/icon/203669/">Game Boy Advance Vector</a> by Mark Davis from the Noun Project, <a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></p><hr>
+      <p>This garbage was made with AI. Use it, don't use it. I don't care. ✌🏻</p>
+            <p><a href="https://github.com/BrandonKowalski/vid2gba">Source on GitHub</a></p>
+    </footer>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,12 @@
+/target
+/player/*.o
+/player/player.elf
+*.gba
+!/player/player.gba
+/web/app/node_modules
+/web/app/dist
+/web/app/public/mgba
+/web/app/src/wasm-pkg
+/web/app/test-results
+/web/app/playwright-report
+/web/app/tests/fixtures
