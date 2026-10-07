@@ -10,3 +10,4 @@
 /web/app/test-results
 /web/app/playwright-report
 /web/app/tests/fixtures
+/.wrangler
